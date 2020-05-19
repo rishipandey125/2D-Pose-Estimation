@@ -21,6 +21,7 @@ inHeight = 368
 inpBlob = cv2.dnn.blobFromImage(img, 1.0 / 255, (inWidth, inHeight), (0, 0, 0), swapRB=False, crop=False)
 network.setInput(inpBlob)
 
-#Output Matrix
+#Output Matrix of CNN given the input Image
 output = network.forward()
+#working on parsing the output
 print(output)
