@@ -12,8 +12,8 @@ network = cv2.dnn.readNetFromCaffe(protoFile,weightsFile)
 #Read Image
 img = cv2.imread("image.jpeg")
 
-height = img.shape[0]
-width = img.shape[1]
+imgHeight = img.shape[0]
+imgWidth = img.shape[1]
 
 #Prep Input Image for Network
 inWidth = 368
