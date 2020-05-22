@@ -11,7 +11,7 @@ weightsFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_ite
 network = cv2.dnn.readNetFromCaffe(protoFile,weightsFile)
 
 #Read Image
-img = cv2.imread("image.jpeg")
+img = cv2.imread("test_rishi_pose.jpg")
 imgCopy = np.copy(img)
 imgHeight = img.shape[0]
 imgWidth = img.shape[1]
@@ -48,7 +48,7 @@ fourth dimension is the width of the output map (where it is +x?)
 
 keyPoints = []
 numKeyPoints = 15
-
+POSE_PAIRS = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13] ]
 for i in range(numKeyPoints):
     confidenceMap = output[0,i,:,:]
     #only using prob and point
@@ -58,11 +58,19 @@ for i in range(numKeyPoints):
         #scale x and y values
         x = int((imgWidth*point[0])/width)
         y = int((imgHeight*point[1])/height)
-
+        keyPoints.append((x,y))
         #draw a circle
         cv2.circle(imgCopy, (x,y), 8, (0, 255, 255), thickness=-1, lineType=cv2.FILLED)
         cv2.putText(imgCopy, "{}".format(i), (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, lineType=cv2.LINE_AA)
+#
+# draw skeleton
+# for pair in POSE_PAIRS:
+#     partA = pair[0]
+#     partB = pair[1]
+#
+#     if keyPoints[partA] and keyPoints[partB]:
+#         cv2.line(imgCopy, keyPoints[partA], keyPoints[partB], (0, 255, 255), 2)
+#         cv2.circle(imgCopy, keyPoints[partA], 8, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
 
-cv2.imshow('Output-Keypoints', imgCopy)
-cv2.waitKey(0)
-# cv2.imwrite('Output-Keypoints.jpg', imgCopy)
+
+cv2.imwrite('Output-Keypoints.jpg', imgCopy)
