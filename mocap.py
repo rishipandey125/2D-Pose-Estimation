@@ -26,7 +26,7 @@ network.setInput(inpBlob)
 output = network.forward()
 #height and width of output
 height = output.shape[2]
-width = out.shape[3]
+width = output.shape[3]
 
 
 '''
@@ -49,8 +49,8 @@ fourth dimension is the width of the output map (where it is +x?)
 keyPoints = []
 numKeyPoints = 15
 
-for x in range(numKeyPoints):
-    confidenceMap = output[0,x,:,:]
+for i in range(numKeyPoints):
+    confidenceMap = output[0,i,:,:]
     #only using prob and point
     minVal, prob, minLoc, point = cv2.minMaxLoc(confidenceMap)
     #KeyPoint in Threshold
@@ -58,4 +58,11 @@ for x in range(numKeyPoints):
         #scale x and y values
         x = int((imgWidth*point[0])/width)
         y = int((imgHeight*point[1])/height)
-        
+
+        #draw a circle
+        cv2.circle(imgCopy, (x,y), 8, (0, 255, 255), thickness=-1, lineType=cv2.FILLED)
+        cv2.putText(imgCopy, "{}".format(i), (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, lineType=cv2.LINE_AA)
+
+cv2.imshow('Output-Keypoints', imgCopy)
+cv2.waitKey(0)
+# cv2.imwrite('Output-Keypoints.jpg', imgCopy)
