@@ -12,7 +12,7 @@ network = cv2.dnn.readNetFromCaffe(protoFile,weightsFile)
 
 #Read Image
 img = cv2.imread("image.jpeg")
-
+imgCopy = np.copy(img)
 imgHeight = img.shape[0]
 imgWidth = img.shape[1]
 
@@ -24,7 +24,10 @@ network.setInput(inpBlob)
 
 #Output Matrix of CNN given the input Image
 output = network.forward()
-#working on parsing the output
+#height and width of output
+height = output.shape[2]
+width = out.shape[3]
+
 
 '''
 first dimension is the image id
@@ -48,5 +51,11 @@ numKeyPoints = 15
 
 for x in range(numKeyPoints):
     confidenceMap = output[0,x,:,:]
-    print(confidenceMap) #this produces a confidence map
-    print("---------")
+    #only using prob and point
+    minVal, prob, minLoc, point = cv2.minMaxLoc(confidenceMap)
+    #KeyPoint in Threshold
+    if prob > 0.1:
+        #scale x and y values
+        x = int((imgWidth*point[0])/width)
+        y = int((imgHeight*point[1])/height)
+        
