@@ -24,4 +24,13 @@ network.setInput(inpBlob)
 #Output Matrix of CNN given the input Image
 output = network.forward()
 #working on parsing the output
-print(output)
+
+'''
+first dimension is the image id
+second dimension is the index of the keypoint (which number point is it)
+although we have like 18 points it will be out of 44 because past the first 18 is a heatmap
+third dimension is the height of the output map (where it is +y?)
+fourth dimension is the width of the output map (where it is +x?)
+'''
+for x in output[0]:
+    print(x)
