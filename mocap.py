@@ -11,7 +11,7 @@ weightsFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_ite
 network = cv2.dnn.readNetFromCaffe(protoFile,weightsFile)
 
 #Read Image
-img = cv2.imread("jack.jpg")
+img = cv2.imread("nick4.jpg")
 imgCopy = np.copy(img)
 imgHeight = img.shape[0]
 imgWidth = img.shape[1]
@@ -69,8 +69,8 @@ for pair in POSE_PAIRS:
     partB = pair[1]
 
     if keyPoints[partA] and keyPoints[partB]:
-        cv2.line(imgCopy, keyPoints[partA], keyPoints[partB], (0, 255, 255), 2)
-        cv2.circle(imgCopy, keyPoints[partA], 8, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+        cv2.line(imgCopy, keyPoints[partA], keyPoints[partB], (0, 0, 255), 10)
+        cv2.circle(imgCopy, keyPoints[partA], 8, (0, 0, 255), thickness=-5, lineType=cv2.FILLED)
 
 
 cv2.imwrite('Output-Keypoints.jpg', imgCopy)
