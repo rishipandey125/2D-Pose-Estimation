@@ -45,10 +45,9 @@ for i in range(numKeyPoints):
 
 # draw skeleton
 for pair in POSE_PAIRS:
-    partA = pair[0]
-    partB = pair[1]
-    if keyPoints[partA] and keyPoints[partB]:
-        cv2.line(img, keyPoints[partA], keyPoints[partB], (0, 0, 255), 10)
-
+    point1 = pair[0]
+    point2 = pair[1]
+    if keyPoints[point1] and keyPoints[point2]:
+        cv2.line(img, keyPoints[point1], keyPoints[point2], (0, 0, 255), 10)
 
 cv2.imwrite('Output-Keypoints.jpg', img)
