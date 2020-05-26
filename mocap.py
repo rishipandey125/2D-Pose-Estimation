@@ -3,7 +3,7 @@ import numpy as np
 #simple mocap project created by Rishi Pandey
 
 '''
-Current Improvements: Joint Swapping, No Overlap, Right Connects (None in spots not detected in KeyPoints)
+Current Improvements: Joint Swapping, No Overlap, Missing Joint Estimation
 Savgol Smoothing?
 '''
 # Paths for the CNN (off of my git)
@@ -24,6 +24,7 @@ outputVideo = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G
 POSE_PAIRS = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
 
 #loop through the below with each video frame, write that drawn skeleton to the outputVideo
+count = 0
 while hasFrame:
     img = frame
     imgHeight = img.shape[0]
@@ -59,6 +60,7 @@ while hasFrame:
             cv2.putText(img, "{}".format(i), (x,y), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
         else:
             keyPoints.append(None)
+    #conduct the swapping of joints, and make sure no overlap
 
     # draw skeleton
     for pair in POSE_PAIRS:
@@ -76,6 +78,9 @@ while hasFrame:
     outputVideo.write(img)
     # updating frame for next iteration
     print("Write Frame")
+    count += 1
+    if count == 50:
+        break
     hasFrame,frame = video.read()
 
 
