@@ -60,15 +60,22 @@ while hasFrame:
     for pair in POSE_PAIRS:
         point1 = pair[0]
         point2 = pair[1]
-        #list index out of range here 
-        if keyPoints[point1] and keyPoints[point2]:
-            #draws a line between the two corresponding points
-            cv2.line(img, keyPoints[point1], keyPoints[point2], (0, 0, 255), 10)
+        #list index out of range here
+        #keyPoints is of length 15,
+        try:
+            if keyPoints[point1] and keyPoints[point2]:
+                #draws a line between the two corresponding points
+                cv2.line(img, keyPoints[point1], keyPoints[point2], (0, 0, 255), 10)
+        except IndexError:
+            print("Index Out of Bounds on Frame " + str(count))
     outputVideo.write(img)
     # updating frame for next iteration
     print("WRITING FRAME " + str(count))
     hasFrame,frame = video.read()
     count += 1
+    if count == 100:
+        print("First 10 Seconds")
+        break
 
 print("DONE WRITING LOOP EXITED")
 outputVideo.release()
