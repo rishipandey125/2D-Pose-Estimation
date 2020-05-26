@@ -9,8 +9,18 @@ weightsFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_ite
 # Reading the CNN
 network = cv2.dnn.readNetFromCaffe(protoFile,weightsFile)
 
+#Path to Video File
+videoPath = ""
+video = cv2.VideoCapture(videoPath)
+
+#boolean stating there is a next frame, and storing the next frame in the variable frame
+hasFrame,frame = video.read()
+
+
+
+
 #Read Image
-img = cv2.imread("test_images/test_rishi_pose.jpg")
+# img = cv2.imread("test_images/test_rishi_pose.jpg")
 imgHeight = img.shape[0]
 imgWidth = img.shape[1]
 
