@@ -21,7 +21,8 @@ hasFrame,frame = video.read()
 #write output video
 outputVideo = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame.shape[1],frame.shape[0]))
 
-POSE_PAIRS = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
+skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
+correspondingJoints = [[2,5],[3,6],[4,7],[8,11],[9,12],[10,13]]
 
 #loop through the below with each video frame, write that drawn skeleton to the outputVideo
 count = 0
@@ -45,36 +46,50 @@ while hasFrame:
     #keyPoints is a list of the locations of the 15 points, main data needed for writing to animation
     keyPoints = []
     numKeyPoints = 15
+    corresponding_index = 0
     for i in range(numKeyPoints):
         confidenceMap = output[0,i,:,:]
         #only using prob and point
         minVal, prob, minLoc, point = cv2.minMaxLoc(confidenceMap)
         #KeyPoint in Threshold
         if prob > 0.1:
+            #check 5,6,7 and 11,12,13 for joint swapping
             #scale x and y values
             x = int((imgWidth*point[0])/width)
             y = int((imgHeight*point[1])/height)
             keyPoints.append((x,y))
-            #draw a circle
-            cv2.circle(img, (x,y), 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
-            cv2.putText(img, "{}".format(i), (x,y), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
+            if i == correspondingJoints[corresponding_index][1] and correspondingJoints[corresponding_index][0] != None:
+                previousPoint = correspondingJoints[corresponding_index][0]
+                #check for overlap
+                if keyPoints[previousPoint] == keyPoints[i]:
+                    #which one is correct?
+                    if keyPoints[i][0] >= (imgWidth/2):
+                        # the right keypoint is correct
+                        keyPoints[previousPoint] = None
+                    else:
+                        #the left keypoint is correct
+                        keyPoints[i] = None
+                # check for swap and overlap
+                else: #check for swap
+                    if keyPoints[previousPoint][0] > keyPoints[i][0]:
+                        #swap
+                        tempPoint = keyPoints[i]
+                        keyPoints[i] = keyPoints[previousPoint]
+                        keyPoints[previousPoint] = tempPoint
+                corresponding_index += 1
         else:
             keyPoints.append(None)
-    #conduct the swapping of joints, and make sure no overlap
 
     # draw skeleton
-    for pair in POSE_PAIRS:
+    for pair in skeletonPairs:
         point1 = pair[0]
         point2 = pair[1]
-        try:
-            #The reason we are getting index out of bounds, is because there are supposed to be
-            #15 points, but sometimes it is only recognizing 12 joints so keyPoints size is only 12
-            #Therefore when trying to "connect the dots", we have dots trying to be connected that don't exist
-            if keyPoints[point1]!= None and keyPoints[point2] != None:
-                #draws a line between the two corresponding points
-                cv2.line(img, keyPoints[point1], keyPoints[point2], (0, 0, 255), 10)
-        except IndexError:
-            print("Index Out of Bounds on Frame " + str(count))
+        if keyPoints[point1] != None and keyPoints[point2] != None:
+            #draws a line between the two corresponding points
+            if keyPoints[i] != None:
+                cv2.circle(img, (x,y), 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
+                cv2.putText(img, "{}".format(i), (x,y), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
+            cv2.line(img, keyPoints[point1], keyPoints[point2], (0, 0, 255), 10)
     outputVideo.write(img)
     # updating frame for next iteration
     print("Write Frame")
