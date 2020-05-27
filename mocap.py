@@ -67,6 +67,7 @@ while hasFrame:
                         #check for overlap
                         #OVERLAP IS NOT FIXED, POINTS do not detect to the exact same spot,
                         #they detect to VERY close to the same spot.
+                        #write a function to check overlapping joints
                         if keyPoints[previousPoint] == keyPoints[i]:
                             print("Detected/Fixing Overlap")
                             #which one is correct?
@@ -109,3 +110,17 @@ while hasFrame:
 
 print("DONE WRITING LOOP EXITED")
 outputVideo.release()
+
+#return true if two joints are relatively in the same location (detecting the same point)
+#false otherwise
+def overlappingJoints(correspondingPoint,point,skeletalPoint):
+    correspondingDistance = np.square(((correspondingPoint[0] - point[0])**2) + ((correspondingPoint[1] - point[1])**2))
+    skeletalDistance = np.square(((skeletalPoint[0] - point[0])**2) + ((skeletalPoint[1] - point[1])**2))
+    if correspondingDistance >= skeletalDistance:
+        return True
+    else:
+        return False
+    #check distance formula? if that is p close return true?
+    #draw a radius around a joint, is that point within the radius?
+    #so like 11 is closest to 7, and 4 corresponds with 7 so if 4 is closer to 7 than
+    #7 is with 11, then you overlap
