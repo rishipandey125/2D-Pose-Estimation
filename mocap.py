@@ -58,25 +58,32 @@ while hasFrame:
             x = int((imgWidth*point[0])/width)
             y = int((imgHeight*point[1])/height)
             keyPoints.append((x,y))
-            if i == correspondingJoints[corresponding_index][1] and correspondingJoints[corresponding_index][0] != None:
-                previousPoint = correspondingJoints[corresponding_index][0]
-                #check for overlap
-                if keyPoints[previousPoint] == keyPoints[i]:
-                    #which one is correct?
-                    if keyPoints[i][0] >= (imgWidth/2):
-                        # the right keypoint is correct
-                        keyPoints[previousPoint] = None
-                    else:
-                        #the left keypoint is correct
-                        keyPoints[i] = None
-                # check for swap and overlap
-                else: #check for swap
-                    if keyPoints[previousPoint][0] > keyPoints[i][0]:
-                        #swap
-                        tempPoint = keyPoints[i]
-                        keyPoints[i] = keyPoints[previousPoint]
-                        keyPoints[previousPoint] = tempPoint
-                corresponding_index += 1
+            #index out of bounds here
+            if corresponding_index < len(correspondingJoints):
+                if i == correspondingJoints[corresponding_index][1]:
+                    previousPoint = correspondingJoints[corresponding_index][0]
+                    corresponding_index += 1
+                    if keyPoints[previousPoint] != None:
+                        #check for overlap
+                        #OVERLAP IS NOT FIXED, POINTS do not detect to the exact same spot,
+                        #they detect to VERY close to the same spot.
+                        if keyPoints[previousPoint] == keyPoints[i]:
+                            print("Detected/Fixing Overlap")
+                            #which one is correct?
+                            if keyPoints[i][0] >= (imgWidth/2):
+                                # the right keypoint is correct
+                                keyPoints[previousPoint] = None
+                            else:
+                                #the left keypoint is correct
+                                keyPoints[i] = None
+                        # check for swap and overlap
+                        else: #check for swap
+                            if keyPoints[previousPoint][0] > keyPoints[i][0]:
+                                print("Detected/Fixing Swap")
+                                #swap
+                                tempPoint = keyPoints[i]
+                                keyPoints[i] = keyPoints[previousPoint]
+                                keyPoints[previousPoint] = tempPoint
         else:
             keyPoints.append(None)
 
@@ -86,9 +93,10 @@ while hasFrame:
         point2 = pair[1]
         if keyPoints[point1] != None and keyPoints[point2] != None:
             #draws a line between the two corresponding points
-            if keyPoints[i] != None:
-                cv2.circle(img, (x,y), 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
-                cv2.putText(img, "{}".format(i), (x,y), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
+            cv2.circle(img, keyPoints[point1], 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
+            cv2.putText(img, "{}".format(point1), keyPoints[point1], cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
+            cv2.circle(img, keyPoints[point2], 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
+            cv2.putText(img, "{}".format(point2), keyPoints[point2], cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
             cv2.line(img, keyPoints[point1], keyPoints[point2], (0, 0, 255), 10)
     outputVideo.write(img)
     # updating frame for next iteration
