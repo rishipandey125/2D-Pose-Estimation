@@ -19,14 +19,15 @@ def analyzeKeyPoints(video):
 
     #boolean stating there is a next frame, and storing the next frame in the variable frame
     hasFrame,frame = video.read()
+
     #corresponding joints data for swapping
     correspondingJoints = [[2,5],[3,6],[4,7],[8,11],[9,12],[10,13]]
+    count = 0
+    keyPoints = []
     while hasFrame:
-        imgHeight = frame.shape[0]
-        imgWidth = frame.shape[1]
+        imgHeight, imgWidth = frame.shape[0], frame.shape[1]
         #Prep Input Image for Network
-        inWidth = 368
-        inHeight = 368
+        inWidth, inHeight = 368, 368
         inpBlob = cv2.dnn.blobFromImage(frame, 1.0 / 255, (inWidth, inHeight), (0, 0, 0), swapRB=False, crop=False)
         network.setInput(inpBlob)
 
@@ -34,15 +35,12 @@ def analyzeKeyPoints(video):
         output = network.forward()
 
         #height and width of output
-        height = output.shape[2]
-        width = output.shape[3]
+        height,width = output.shape[2], output.shape[3]
 
-        keyPoints = []
         numKeyPoints = 15
         corresponding_index = 0
+        x_keyPoints, y_keyPoints = [], []
         for i in range(numKeyPoints):
-            x_keyPoints = []
-            y_keyPoints = []
             confidenceMap = output[0,i,:,:]
             #only using prob and point
             minVal, prob, minLoc, point = cv2.minMaxLoc(confidenceMap)
@@ -53,14 +51,16 @@ def analyzeKeyPoints(video):
                 y = int((imgHeight*point[1])/height)
                 x_keyPoints.append(x)
                 y_keyPoints.append(y)
+                #index in bounds to check for swap?
                 if corresponding_index < len(correspondingJoints):
+                    #at the right index?
                     if i == correspondingJoints[corresponding_index][1]:
                         previousPoint = correspondingJoints[corresponding_index][0]
                         corresponding_index += 1
-                        if keyPoints[previousPoint][0] > keyPoints[i][0]: #swap!
-                            tempPoint = keyPoints[i]
-                            keyPoints[i] = keyPoints[previousPoint]
-                            keyPoints[previousPoint] = tempPoint
+                        if x_keyPoints[previousPoint] > x_keyPoints[i]: #swap!
+                            tempPoint_x, tempPoint_y = x_keyPoints[i], y_keyPoints[i]
+                            x_keyPoints[i], y_keyPoints[i] = x_keyPoints[previousPoint], x_keyPoints[previousPoint]
+                            x_keyPoints[previousPoint], y_keyPoints[previousPoint] = tempPoint_x, tempPoint_y
 
             else:
                 x_keyPoints.append(previous_x[i])
@@ -69,15 +69,16 @@ def analyzeKeyPoints(video):
         previous_x, previous_y = x_keyPoints, y_keyPoints
         keyPoints.append(x_keyPoints + y_keyPoints)
         hasFrame,frame = video.read()
-
+        count += 1
+        if count == 50:
+            break
     return keyPoints
 
-
-
-
-
-
-
+data = analyzeKeyPoints(video)
+for x in data:
+    if len(x) != 30:
+        print("bad length: " + str(len(x)))
+    print(x)
 
 
 
