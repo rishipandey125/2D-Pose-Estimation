@@ -24,7 +24,7 @@ weightsFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_ite
 network = cv2.dnn.readNetFromCaffe(protoFile,weightsFile)
 
 #Path to Video File
-videoPath = "test_images/serge.mp4"
+videoPath = "test_images/dance.mp4"
 video = cv2.VideoCapture(videoPath)
 #boolean stating there is a next frame, and storing the next frame in the variable frame
 hasFrame,frame = video.read()
@@ -108,7 +108,7 @@ while hasFrame:
     # updating frame for next iteration
     print("Write Frame")
     count += 1
-    if count == 50:
+    if count == 20:
         break
     hasFrame,frame = video.read()
 
