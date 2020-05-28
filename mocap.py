@@ -75,19 +75,12 @@ def analyzeKeyPoints(video):
     return keyPoints
 
 data = analyzeKeyPoints(video)
-for x in data:
-    if len(x) != 30:
-        print("bad length: " + str(len(x)))
-    print(x)
+
+# smooth data!
 
 
 
 # skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
-
-    #collect the data in a frame: [x cords] + [ycords] format where xcords and ycords are ALWAYS of length 15
-    #then the structure will be frame num: [all cords] where all cords is on length 30 and the first 15 are x, and the last 15 are y
-    #then you can smoooth each row
-    #there can be no None in this list
     # draw skeleton
     # for pair in skeletonPairs:
     #     point1 = pair[0]
@@ -104,5 +97,4 @@ for x in data:
     # print("Write Frame")
 
 
-# print("DONE WRITING LOOP EXITED")
 # outputVideo.release()
