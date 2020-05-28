@@ -2,6 +2,16 @@ import cv2
 import numpy as np
 #simple mocap project created by Rishi Pandey
 
+#return true if two joints are relatively in the same location (detecting the same point)
+#false otherwise
+def overlappingJoints(point1,point2,minDist):
+    distance = np.sqrt(np.square(point1[0] - point2[0]) + np.square(point1[1] - point2[1]))
+    #we need a new comparison distance
+    if distance <= minDist:
+        return True
+    else:
+        return False
+
 '''
 Current Improvements: Joint Swapping, No Overlap, Missing Joint Estimation
 Savgol Smoothing?
@@ -30,7 +40,6 @@ while hasFrame:
     img = frame
     imgHeight = img.shape[0]
     imgWidth = img.shape[1]
-
     #Prep Input Image for Network
     inWidth = 368
     inHeight = 368
@@ -65,10 +74,7 @@ while hasFrame:
                     corresponding_index += 1
                     if keyPoints[previousPoint] != None:
                         #check for overlap
-                        #OVERLAP IS NOT FIXED, POINTS do not detect to the exact same spot,
-                        #they detect to VERY close to the same spot.
-                        #write a function to check overlapping joints
-                        if keyPoints[previousPoint] == keyPoints[i]:
+                        if overlappingJoints(keyPoints[previousPoint],keyPoints[i],imgWidth/50):
                             print("Detected/Fixing Overlap")
                             #which one is correct?
                             if keyPoints[i][0] >= (imgWidth/2):
@@ -77,7 +83,6 @@ while hasFrame:
                             else:
                                 #the left keypoint is correct
                                 keyPoints[i] = None
-                        # check for swap and overlap
                         else: #check for swap
                             if keyPoints[previousPoint][0] > keyPoints[i][0]:
                                 print("Detected/Fixing Swap")
@@ -110,17 +115,3 @@ while hasFrame:
 
 print("DONE WRITING LOOP EXITED")
 outputVideo.release()
-
-#return true if two joints are relatively in the same location (detecting the same point)
-#false otherwise
-def overlappingJoints(correspondingPoint,point,skeletalPoint):
-    correspondingDistance = np.square(((correspondingPoint[0] - point[0])**2) + ((correspondingPoint[1] - point[1])**2))
-    skeletalDistance = np.square(((skeletalPoint[0] - point[0])**2) + ((skeletalPoint[1] - point[1])**2))
-    if correspondingDistance >= skeletalDistance:
-        return True
-    else:
-        return False
-    #check distance formula? if that is p close return true?
-    #draw a radius around a joint, is that point within the radius?
-    #so like 11 is closest to 7, and 4 corresponds with 7 so if 4 is closer to 7 than
-    #7 is with 11, then you overlap
