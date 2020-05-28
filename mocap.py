@@ -1,7 +1,9 @@
 import cv2
 import numpy as np
 #simple mocap project created by Rishi Pandey
-
+#collect the data of the pose locations
+#rework and smooth that data mathematically
+#write the final videos with the smoothed data
 #return true if two joints are relatively in the same location (detecting the same point)
 #false otherwise
 def overlappingJoints(point1,point2,minDist):
@@ -85,7 +87,6 @@ while hasFrame:
                                 keyPoints[i] = None
                         else: #check for swap
                             if keyPoints[previousPoint][0] > keyPoints[i][0]:
-                                # print("Detected/Fixing Swap")
                                 #swap
                                 tempPoint = keyPoints[i]
                                 keyPoints[i] = keyPoints[previousPoint]
