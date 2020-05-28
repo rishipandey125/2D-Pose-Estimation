@@ -24,7 +24,7 @@ weightsFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_ite
 network = cv2.dnn.readNetFromCaffe(protoFile,weightsFile)
 
 #Path to Video File
-videoPath = "test_images/dance.mp4"
+videoPath = "test_images/serge2.mp4"
 video = cv2.VideoCapture(videoPath)
 #boolean stating there is a next frame, and storing the next frame in the variable frame
 hasFrame,frame = video.read()
@@ -75,7 +75,7 @@ while hasFrame:
                     if keyPoints[previousPoint] != None:
                         #check for overlap
                         if overlappingJoints(keyPoints[previousPoint],keyPoints[i],imgWidth/50):
-                            print("Detected/Fixing Overlap")
+                            # print("Detected/Fixing Overlap")
                             #which one is correct?
                             if keyPoints[i][0] >= (imgWidth/2):
                                 # the right keypoint is correct
@@ -85,7 +85,7 @@ while hasFrame:
                                 keyPoints[i] = None
                         else: #check for swap
                             if keyPoints[previousPoint][0] > keyPoints[i][0]:
-                                print("Detected/Fixing Swap")
+                                # print("Detected/Fixing Swap")
                                 #swap
                                 tempPoint = keyPoints[i]
                                 keyPoints[i] = keyPoints[previousPoint]
@@ -106,12 +106,12 @@ while hasFrame:
             cv2.line(img, keyPoints[point1], keyPoints[point2], (0, 0, 255), 10)
     outputVideo.write(img)
     # updating frame for next iteration
-    print("Write Frame")
+    # print("Write Frame")
     count += 1
-    if count == 20:
+    if count == 50:
         break
     hasFrame,frame = video.read()
 
 
-print("DONE WRITING LOOP EXITED")
+# print("DONE WRITING LOOP EXITED")
 outputVideo.release()
