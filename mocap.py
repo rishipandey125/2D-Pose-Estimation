@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+import pandas as pd
+from scipy import signal
 #simple mocap project created by Rishi Pandey
 #collect the data of the pose locations
 #rework and smooth that data mathematically
@@ -75,8 +77,11 @@ def analyzeKeyPoints(video):
     return keyPoints
 
 data = analyzeKeyPoints(video)
+df = pd.DataFrame.from_records(data)
 
 # smooth data!
+for x in range(len(data[0])):
+    pd[x] = signal.savgol_filter(pd[x], 13, 2)
 
 
 
