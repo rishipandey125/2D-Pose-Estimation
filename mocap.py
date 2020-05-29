@@ -81,25 +81,39 @@ df = pd.DataFrame.from_records(data)
 
 # smooth data!
 for x in range(len(data[0])):
-    pd[x] = signal.savgol_filter(pd[x], 13, 2)
+    print("smoothing")
+    #window_length = 13 and polyorder = 2
+    df[x] = signal.savgol_filter(df[x], 13, 2)
 
+hasFrame,frame = video.read()
 
+outputVideo = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame.shape[1],frame.shape[0]))
 
-# skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
+skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
+
+frameCount = 0
+while hasFrame or frameCount < len(df[0]):
     # draw skeleton
-    # for pair in skeletonPairs:
-    #     point1 = pair[0]
-    #     point2 = pair[1]
-    #     if keyPoints[point1] != None and keyPoints[point2] != None:
-    #         #draws a line between the two corresponding points
-    #         cv2.circle(img, keyPoints[point1], 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
-    #         cv2.putText(img, "{}".format(point1), keyPoints[point1], cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
-    #         cv2.circle(img, keyPoints[point2], 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
-    #         cv2.putText(img, "{}".format(point2), keyPoints[point2], cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
-    #         cv2.line(img, keyPoints[point1], keyPoints[point2], (0, 0, 255), 10)
-    # outputVideo.write(img)
-    # updating frame for next iteration
-    # print("Write Frame")
+    for pair in skeletonPairs:
+        point1 = pair[0]
+        point2 = pair[1]
+        # values = np.array(df.values[frameCount], int)
+        cord1 = tuple(np.array([df[point1][frameCount],df[point1+15][frameCount]],int))
+        cord2 = tuple(np.array([df[point2][frameCount],df[point2+15][frameCount]],int))
+
+        #you hove to parse to make it a tuple!
+            #draws a line between the two corresponding points
+        cv2.circle(frame, cord1, 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
+        cv2.putText(frame, "{}".format(point1), cord1, cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
+        cv2.circle(frame, cord2, 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
+        cv2.putText(frame, "{}".format(point2), cord2, cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
+        cv2.line(frame, cord1, cord2, (0, 0, 255), 10)
+        outputVideo.write(frame)
+        print("Write Frame: " + str(frameCount))
+        # updating frame for next iteration
+        frameCount += 1
+        hasFrame,frame = video.read()
 
 
-# outputVideo.release()
+print("Process Complete")
+outputVideo.release()
