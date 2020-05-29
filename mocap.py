@@ -24,7 +24,6 @@ def analyzeKeyPoints(video):
 
     #corresponding joints data for swapping
     correspondingJoints = [[2,5],[3,6],[4,7],[8,11],[9,12],[10,13]]
-    count = 0
     keyPoints = []
     while hasFrame:
         imgHeight, imgWidth = frame.shape[0], frame.shape[1]
@@ -71,9 +70,6 @@ def analyzeKeyPoints(video):
         previous_x, previous_y = x_keyPoints, y_keyPoints
         keyPoints.append(x_keyPoints + y_keyPoints)
         hasFrame,frame = video.read()
-        count += 1
-        if count == 50:
-            break
     return keyPoints
 
 data = analyzeKeyPoints(video)
@@ -83,11 +79,12 @@ df = pd.DataFrame.from_records(data)
 for x in range(len(data[0])):
     print("smoothing")
     #window_length = 13 and polyorder = 2
-    df[x] = signal.savgol_filter(df[x], 13, 2)
+    df[x] = signal.savgol_filter(df[x], 15, 2)
 
 video = cv2.VideoCapture(videoPath)
 hasFrame,frame = video.read()
-outputVideo = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame.shape[1],frame.shape[0]))
+outputFrameRate = 24
+outputVideo = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), outputFrameRate, (frame.shape[1],frame.shape[0]))
 
 skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
 
