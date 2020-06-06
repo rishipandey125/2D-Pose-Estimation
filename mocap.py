@@ -7,6 +7,7 @@ from scipy import signal
 #rework and smooth that data mathematically
 #write the final videos with the smoothed data
 
+#test videos then work on 3d point estimation
 #Path to Video File
 videoPath = "test_images/serge2.mp4"
 video = cv2.VideoCapture(videoPath)
