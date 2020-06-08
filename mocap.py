@@ -14,13 +14,13 @@ from scipy import signal
 #Path to Video File
 
 #impoving 2d accuracy:
-#things just may improve if you clean the performance a bit (make sure the first and last frame are accurate), lets try
-#loses joints when things go sideways
+#loses joints when things go sideways, error is all when u go sideways! 
 #can we retrieve right data and sub it in for wrong data?
 
 #testing git
-videoPath = "test_images/clip3.mp4"
+videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
 video = cv2.VideoCapture(videoPath)
+
 
 def analyzeKeyPoints(video):
     # Paths for the CNN (on local machine)
