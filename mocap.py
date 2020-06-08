@@ -12,7 +12,7 @@ from scipy import signal
 #idea for 3d: take the head and split it into x,y,z and then smooth and reassemble
 #tomasi kanade algo seems to be something worthwhile
 #Path to Video File
-videoPath = "test_images/serge2.mp4"
+videoPath = "test_images/clip3.mp4"
 video = cv2.VideoCapture(videoPath)
 
 def analyzeKeyPoints(video):
