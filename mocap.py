@@ -13,6 +13,11 @@ from scipy import signal
 #tomasi kanade algo seems to be something worthwhile
 #Path to Video File
 
+#impoving 2d accuracy:
+#things just may improve if you clean the performance a bit (make sure the first and last frame are accurate), lets try
+#loses joints when things go sideways
+#can we retrieve right data and sub it in for wrong data?
+
 #testing git
 videoPath = "test_images/clip3.mp4"
 video = cv2.VideoCapture(videoPath)
