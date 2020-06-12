@@ -3,7 +3,8 @@ import numpy as np
 import pandas as pd
 from scipy import signal
 #WEEKEND OF JUNE 12th:
-    #Funcitonize and Document Code
+# ALWAYS MAKE FIRST AND LAST FRAMES SUPER SIMPLE AND CORRECT
+    #Funcitonize, Efficiency and Document Code
     #Take Correct Videos and Test (5 Segments)
     #3D point estimation
 #simple mocap project created by Rishi Pandey
@@ -88,7 +89,8 @@ def analyzeKeyPoints(video):
         hasFrame,frame = video.read()
     return keyPoints
 
-def outlierPoint(previousPoint,currentPoint,):
+#build a func to stop the sliding point issue (when a point randomly moves somewhere totally random next frame)
+def slidingPoint(previousPoint,currentPoint,):
 
 data = analyzeKeyPoints(video)
 df = pd.DataFrame.from_records(data)
