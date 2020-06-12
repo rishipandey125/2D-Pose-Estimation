@@ -2,6 +2,10 @@ import cv2
 import numpy as np
 import pandas as pd
 from scipy import signal
+#WEEKEND OF JUNE 12th:
+    #Funcitonize and Document Code
+    #Take Correct Videos and Test (5 Segments)
+    #3D point estimation
 #simple mocap project created by Rishi Pandey
 #collect the data of the pose locations
 #rework and smooth that data mathematically
@@ -14,7 +18,7 @@ from scipy import signal
 #Path to Video File
 
 #impoving 2d accuracy:
-#loses joints when things go sideways, error is all when u go sideways! 
+#loses joints when things go sideways, error is all when u go sideways!
 #can we retrieve right data and sub it in for wrong data?
 
 #testing git
@@ -75,6 +79,7 @@ def analyzeKeyPoints(video):
                             x_keyPoints[previousPoint], y_keyPoints[previousPoint] = tempPoint_x, tempPoint_y
 
             else:
+                #this would be how we check if the guess is wayyyy off of where the last one was
                 x_keyPoints.append(previous_x[i])
                 y_keyPoints.append(previous_y[i])
         # updating frame for next iteration
@@ -83,13 +88,15 @@ def analyzeKeyPoints(video):
         hasFrame,frame = video.read()
     return keyPoints
 
+def outlierPoint(previousPoint,currentPoint,):
+
 data = analyzeKeyPoints(video)
 df = pd.DataFrame.from_records(data)
 
 # smooth data!
 for x in range(len(data[0])):
     print("smoothing")
-    #window_length = 13 and polyorder = 2
+    #window_length = 15 and polyorder = 2
     df[x] = signal.savgol_filter(df[x], 15, 2)
 
 video = cv2.VideoCapture(videoPath)
