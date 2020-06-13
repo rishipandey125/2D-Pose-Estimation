@@ -121,10 +121,8 @@ def motionCapture(path):
     df = smoothData(data)
     frameCount = 0
     while hasFrame and frameCount < len(df[0]):
-        if len(df[0]) == 0:
-            print("LENGTH OF DATAFRAME IS 0")
-        else:
-            print("Probably a while loop error") #also a savgol error
+        print(len(df[0]))
+            #ignore savgol error for now
         for pair in skeletonPairs:
             point1 = pair[0]
             point2 = pair[1]
