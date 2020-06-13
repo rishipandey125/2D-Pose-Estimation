@@ -155,6 +155,6 @@ def motionCapture(path):
         hasFrame,frame = video.read()
     outputVideo.release()
 #test outlier point
-
+    # clean up function afterwards
 # videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
 # motionCapture(videoPath)
