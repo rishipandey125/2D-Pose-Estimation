@@ -4,7 +4,7 @@ import pandas as pd
 from scipy import signal
 #WEEKEND OF JUNE 12th:
 # ALWAYS MAKE FIRST AND LAST FRAMES SUPER SIMPLE AND CORRECT
-    #Funcitonize, Efficiency and Document Code
+    #Efficiency and Document Code
     #Take Correct Videos and Test (5 Segments)
     #3D point estimation
 #simple mocap project created by Rishi Pandey
@@ -22,11 +22,10 @@ from scipy import signal
 #loses joints when things go sideways, error is all when u go sideways!
 #can we retrieve right data and sub it in for wrong data?
 
-#testing git
-videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
-video = cv2.VideoCapture(videoPath)
-
-
+'''
+Anaylyze Keypoints Function
+Uses Video Input to Return List of Keypoints for Each Frame
+'''
 def analyzeKeyPoints(video):
     # Paths for the CNN (on local machine)
     protoFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_deploy_linevec_faster_4_stages.prototxt.txt"
@@ -43,6 +42,7 @@ def analyzeKeyPoints(video):
     keyPoints = []
     while hasFrame:
         imgHeight, imgWidth = frame.shape[0], frame.shape[1]
+
         #Prep Input Image for Network
         inWidth, inHeight = 368, 368
         inpBlob = cv2.dnn.blobFromImage(frame, 1.0 / 255, (inWidth, inHeight), (0, 0, 0), swapRB=False, crop=False)
@@ -78,58 +78,73 @@ def analyzeKeyPoints(video):
                             tempPoint_x, tempPoint_y = x_keyPoints[i], y_keyPoints[i]
                             x_keyPoints[i], y_keyPoints[i] = x_keyPoints[previousPoint], x_keyPoints[previousPoint]
                             x_keyPoints[previousPoint], y_keyPoints[previousPoint] = tempPoint_x, tempPoint_y
-
             else:
-                #this would be how we check if the guess is wayyyy off of where the last one was
                 x_keyPoints.append(previous_x[i])
                 y_keyPoints.append(previous_y[i])
         # updating frame for next iteration
         previous_x, previous_y = x_keyPoints, y_keyPoints
         keyPoints.append(x_keyPoints + y_keyPoints)
+        print("appended keypoint!")
         hasFrame,frame = video.read()
     return keyPoints
 
-#build a func to stop the sliding point issue (when a point randomly moves somewhere totally random next frame)
-def slidingPoint(previousPoint,currentPoint,):
 
-data = analyzeKeyPoints(video)
-df = pd.DataFrame.from_records(data)
+'''
+Smooth Data Helper Function using Savgol Smoothing
+'''
+def smoothData(data):
+    df = pd.DataFrame.from_records(data)
+    # smooth data!
+    for x in range(len(data[0])):
+        print("smoothing")
+        #window_length = 15 and polyorder = 2
+        df[x] = signal.savgol_filter(df[x], 15, 2)
+    return df
 
-# smooth data!
-for x in range(len(data[0])):
-    print("smoothing")
-    #window_length = 15 and polyorder = 2
-    df[x] = signal.savgol_filter(df[x], 15, 2)
 
-video = cv2.VideoCapture(videoPath)
-hasFrame,frame = video.read()
-outputFrameRate = 24
-outputVideo = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), outputFrameRate, (frame.shape[1],frame.shape[0]))
-
-skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
-
-frameCount = 0
-while hasFrame and frameCount < len(df[0]):
-    # draw skeleton
-    for pair in skeletonPairs:
-        point1 = pair[0]
-        point2 = pair[1]
-        cord1 = tuple(np.array([df[point1][frameCount],df[point1+15][frameCount]],int))
-        cord2 = tuple(np.array([df[point2][frameCount],df[point2+15][frameCount]],int))
-
-        #you hove to parse to make it a tuple!
-        #draws a line between the two corresponding points
-        cv2.circle(frame, cord1, 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
-        cv2.putText(frame, "{}".format(point1), cord1, cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
-        cv2.circle(frame, cord2, 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
-        cv2.putText(frame, "{}".format(point2), cord2, cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
-        cv2.line(frame, cord1, cord2, (0, 0, 255), 10)
-    outputVideo.write(frame)
-    print("Write Frame: " + str(frameCount))
-        # updating frame for next iteration
-    frameCount += 1
+'''
+Motion Capture Function
+Uses Video Path to Generate Simple Motion Capture Data and Draws a Skeleton Over the Tracked Person
+'''
+def motionCapture(path):
+    #video object from path
+    video = cv2.VideoCapture(path)
     hasFrame,frame = video.read()
+    #match this to input framrate
+    outputFrameRate = 24
+    outputVideo = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), outputFrameRate, (frame.shape[1],frame.shape[0]))
+    #pairs of points to be aconnected to create a skeleton
+    skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
+    #data is the keypoints of the input video
+    data = analyzeKeyPoints(video)
+    #data smoothed
+    df = smoothData(data)
+    frameCount = 0
+    while hasFrame and frameCount < len(df[0]):
+        if len(df[0]) == 0:
+            print("LENGTH OF DATAFRAME IS 0")
+        else:
+            print("Probably a while loop error") #also a savgol error
+        for pair in skeletonPairs:
+            point1 = pair[0]
+            point2 = pair[1]
+            cord1 = tuple(np.array([df[point1][frameCount],df[point1+15][frameCount]],int))
+            cord2 = tuple(np.array([df[point2][frameCount],df[point2+15][frameCount]],int))
+
+            #draws skeleton on given frame
+            cv2.circle(frame, cord1, 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
+            cv2.putText(frame, "{}".format(point1), cord1, cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
+            cv2.circle(frame, cord2, 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
+            cv2.putText(frame, "{}".format(point2), cord2, cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
+            cv2.line(frame, cord1, cord2, (0, 0, 255), 10)
+        outputVideo.write(frame)
+        print("Write Frame: " + str(frameCount))
+        frameCount += 1
+        hasFrame,frame = video.read()
 
 
-print("Process Complete")
-outputVideo.release()
+    print("Process Complete")
+    outputVideo.release()
+
+videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
+motionCapture(videoPath)
