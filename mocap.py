@@ -26,7 +26,7 @@ from scipy import signal
 Anaylyze Keypoints Function
 Uses Video Input to Return List of Keypoints for Each Frame
 '''
-def analyzeKeyPoints(video):
+def analyzeKeyPoints(path):
     # Paths for the CNN (on local machine)
     protoFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_deploy_linevec_faster_4_stages.prototxt.txt"
     weightsFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_iter_160000.caffemodel"
@@ -34,8 +34,9 @@ def analyzeKeyPoints(video):
     # Reading the CNN
     network = cv2.dnn.readNetFromCaffe(protoFile,weightsFile)
 
+    baseVideo = cv2.VideoCapture(path)
     #boolean stating there is a next frame, and storing the next frame in the variable frame
-    hasFrame,frame = video.read()
+    hasFrame,frame = baseVideo.read()
 
     #corresponding joints data for swapping
     correspondingJoints = [[2,5],[3,6],[4,7],[8,11],[9,12],[10,13]]
@@ -85,7 +86,7 @@ def analyzeKeyPoints(video):
         previous_x, previous_y = x_keyPoints, y_keyPoints
         keyPoints.append(x_keyPoints + y_keyPoints)
         print("appended keypoint!")
-        hasFrame,frame = video.read()
+        hasFrame,frame = baseVideo.read()
     return keyPoints
 
 
@@ -115,14 +116,11 @@ def motionCapture(path):
     outputVideo = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), outputFrameRate, (frame.shape[1],frame.shape[0]))
     #pairs of points to be aconnected to create a skeleton
     skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
-    #data is the keypoints of the input video
-    data = analyzeKeyPoints(video)
+    data = analyzeKeyPoints(path)
     #data smoothed
     df = smoothData(data)
     frameCount = 0
     while hasFrame and frameCount < len(df[0]):
-        print(len(df[0]))
-            #ignore savgol error for now
         for pair in skeletonPairs:
             point1 = pair[0]
             point2 = pair[1]
