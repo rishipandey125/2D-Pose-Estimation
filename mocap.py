@@ -4,7 +4,7 @@ import pandas as pd
 from scipy import signal
 #WEEKEND OF JUNE 12th:
 # ALWAYS MAKE FIRST AND LAST FRAMES SUPER SIMPLE AND CORRECT
-    #Efficiency and Document Code
+    #Efficiency
     #Take Correct Videos and Test (5 Segments)
     #3D point estimation
 #simple mocap project created by Rishi Pandey
@@ -88,6 +88,8 @@ def analyzeKeyPoints(path):
         hasFrame,frame = baseVideo.read()
     return keyPoints
 
+def outlierPoint():
+    return 0
 
 '''
 Smooth Data Helper Function using Savgol Smoothing
