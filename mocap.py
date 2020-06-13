@@ -85,7 +85,6 @@ def analyzeKeyPoints(path):
         # updating frame for next iteration
         previous_x, previous_y = x_keyPoints, y_keyPoints
         keyPoints.append(x_keyPoints + y_keyPoints)
-        print("appended keypoint!")
         hasFrame,frame = baseVideo.read()
     return keyPoints
 
@@ -97,7 +96,6 @@ def smoothData(data):
     df = pd.DataFrame.from_records(data)
     # smooth data!
     for x in range(len(data[0])):
-        print("smoothing")
         #window_length = 15 and polyorder = 2
         df[x] = signal.savgol_filter(df[x], 15, 2)
     return df
@@ -134,12 +132,8 @@ def motionCapture(path):
             cv2.putText(frame, "{}".format(point2), cord2, cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
             cv2.line(frame, cord1, cord2, (0, 0, 255), 10)
         outputVideo.write(frame)
-        print("Write Frame: " + str(frameCount))
         frameCount += 1
         hasFrame,frame = video.read()
-
-
-    print("Process Complete")
     outputVideo.release()
 
 videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
