@@ -78,6 +78,7 @@ def analyzeKeyPoints(path):
                     if outlierPoint(curr,prev,ref):
                         x_keyPoints.append(previous_x[i])
                         y_keyPoints.append(previous_y[i])
+                        continue
 
                 x_keyPoints.append(x)
                 y_keyPoints.append(y)
@@ -153,6 +154,7 @@ def motionCapture(path):
         frameCount += 1
         hasFrame,frame = video.read()
     outputVideo.release()
+#test outlier point
 
-videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
-motionCapture(videoPath)
+# videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
+# motionCapture(videoPath)
