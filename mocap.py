@@ -67,19 +67,6 @@ def analyzeKeyPoints(path):
                 #scale x and y values
                 x = int((imgWidth*point[0])/width)
                 y = int((imgHeight*point[1])/height)
-                if len(keyPoints) > 0:
-                    curr = (x,y)
-                    prev = (previous_x[i],previous_y[i])
-                    if i > 0:
-                        index = i-1
-                    else:
-                        index = i+1
-                    ref = (previous_x[index],previous_y[index])
-                    if outlierPoint(curr,prev,ref):
-                        x_keyPoints.append(previous_x[i])
-                        y_keyPoints.append(previous_y[i])
-                        continue
-
                 x_keyPoints.append(x)
                 y_keyPoints.append(y)
                 #index in bounds to check for swap?
@@ -100,13 +87,6 @@ def analyzeKeyPoints(path):
         keyPoints.append(x_keyPoints + y_keyPoints)
         hasFrame,frame = baseVideo.read()
     return keyPoints
-
-def outlierPoint(curr,prev,ref):
-    referenceDist = np.sqrt(np.square(prev[0]-ref[0]) + np.square(prev[1]-ref[1]))
-    delta = np.sqrt(np.square(prev[0]-curr[0]) + np.square(prev[1]-curr[1]))
-    if delta > referenceDist:
-        return True
-    return False
 
 '''
 Smooth Data Helper Function using Savgol Smoothing
@@ -154,7 +134,5 @@ def motionCapture(path):
         frameCount += 1
         hasFrame,frame = video.read()
     outputVideo.release()
-#test outlier point
-    # clean up function afterwards
-# videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
-# motionCapture(videoPath)
+videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
+motionCapture(videoPath)
