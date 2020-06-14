@@ -94,6 +94,7 @@ Smooth Data Helper Function using Savgol Smoothing
 def smoothData(data):
     df = pd.DataFrame.from_records(data)
     # smooth data!
+    #fuck dataframes lets use a list and then return a pretty list!
     for x in range(len(data[0])):
         #window_length = 15 and polyorder = 2
         df[x] = signal.savgol_filter(df[x], 15, 2)
@@ -135,16 +136,17 @@ def motionCapture(path):
     outputVideo.release()
 
 
-def TwoDPoseData(path):
+def poseData(path):
     data = analyzeKeyPoints(path)
-    smoothed = smoothData(data)
-    frameCount = 1
-    for x in smoothed:
-        print("Frame Number " + str(frameCount))
-        if len(x) != 30:
-            print("weird length at " + str(frameCount))
-        print(x)
-        frameCount += 1
+    df = smoothData(data)
+    numKeyPoints = 15
+    pose2D = []
+    for frameIndex in range(len(df)):
+        frameList = []
+        for x in range(numKeyPoints):
+            frameList.append([df[x][frameIndex],df[x+15][frameIndex]])
+        pose2D.append(frameList)
+    return pose2D
 
 videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
-TwoDPoseData(videoPath)
+print(poseData(videoPath))
