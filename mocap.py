@@ -99,7 +99,6 @@ def smoothData(data):
         df[x] = signal.savgol_filter(df[x], 15, 2)
     return df
 
-
 '''
 Motion Capture Function
 Uses Video Path to Generate Simple Motion Capture Data and Draws a Skeleton Over the Tracked Person
@@ -134,5 +133,18 @@ def motionCapture(path):
         frameCount += 1
         hasFrame,frame = video.read()
     outputVideo.release()
+
+
+def TwoDPoseData(path):
+    data = analyzeKeyPoints(path)
+    smoothed = smoothData(data)
+    frameCount = 1
+    for x in smoothed:
+        print("Frame Number " + str(frameCount))
+        if len(x) != 30:
+            print("weird length at " + str(frameCount))
+        print(x)
+        frameCount += 1
+
 videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
-motionCapture(videoPath)
+TwoDPoseData(videoPath)
