@@ -94,7 +94,7 @@ Smooth Data Helper Function using Savgol Smoothing
 def smoothData(data):
     df = pd.DataFrame.from_records(data)
     # smooth data!
-    #fuck dataframes lets use a list and then return a pretty list!
+    #add the third dimension and make each frame a list of 45 in length then smooth the same way
     for x in range(len(data[0])):
         #window_length = 15 and polyorder = 2
         df[x] = signal.savgol_filter(df[x], 15, 2)
