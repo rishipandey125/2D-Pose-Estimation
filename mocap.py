@@ -143,5 +143,8 @@ def poseData(path):
         pose2D.append(frameList)
     return pose2D
 
+def reconstruction():
+    #mapping (u,v) 2d point to (x,y,z)
+    return 0
 videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
 print(poseData(videoPath))
