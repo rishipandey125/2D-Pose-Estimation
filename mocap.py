@@ -13,7 +13,7 @@ from scipy import signal
 
 
 #idea for 3d: take the head and split it into x,y,z and then smooth and reassemble
-#tomasi kanade algo seems to be something worthwhile
+#perspective projects in the brauer arens paper looks to be best so far
 #Path to Video File
 
 
