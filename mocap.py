@@ -4,7 +4,6 @@ import pandas as pd
 from scipy import signal
 #WEEKEND OF JUNE 12th:
 # ALWAYS MAKE FIRST AND LAST FRAMES SUPER SIMPLE AND CORRECT
-    #Efficiency
     #Take Correct Videos and Test (5 Segments)
     #3D point estimation
 #simple mocap project created by Rishi Pandey
@@ -12,15 +11,11 @@ from scipy import signal
 #rework and smooth that data mathematically
 #write the final videos with the smoothed data
 
-#test videos then work on 3d point estimation
 
 #idea for 3d: take the head and split it into x,y,z and then smooth and reassemble
 #tomasi kanade algo seems to be something worthwhile
 #Path to Video File
 
-#impoving 2d accuracy:
-#loses joints when things go sideways, error is all when u go sideways!
-#can we retrieve right data and sub it in for wrong data?
 
 '''
 Anaylyze Keypoints Function
