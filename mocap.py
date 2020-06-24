@@ -147,6 +147,8 @@ def reconstruction():
     '''
     Process:
     img ml data comes out as origin top left corner (right: +x) (down: +y)
+    iphone x focal length = 28mm
+    Step 1:
     
     '''
     #mapping (u,v) 2d point to (x,y,z)
