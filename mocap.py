@@ -142,4 +142,5 @@ def reconstruction():
     Step 3: Calculate corresponding depth (zi) of corresponding point (mi)
     Step 4: Use (uv) and (z) to calculate (x,y,z) for each (mi) and (mj)
     '''
+
     return skeletonPairs[0]
