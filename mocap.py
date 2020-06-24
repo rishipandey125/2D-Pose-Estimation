@@ -2,20 +2,9 @@ import cv2
 import numpy as np
 import pandas as pd
 from scipy import signal
-#WEEKEND OF JUNE 12th:
-# ALWAYS MAKE FIRST AND LAST FRAMES SUPER SIMPLE AND CORRECT
-    #3D point estimation
-#simple mocap project created by Rishi Pandey
-#collect the data of the pose locations
-#rework and smooth that data mathematically
-#write the final videos with the smoothed data
 
 
-#idea for 3d: take the head and split it into x,y,z and then smooth and reassemble
-#perspective projects in the brauer arens paper looks to be best so far
-#Path to Video File
-
-
+skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
 '''
 Anaylyze Keypoints Function
 Uses Video Input to Return List of Keypoints for Each Frame
@@ -87,6 +76,7 @@ def analyzeKeyPoints(path):
 Smooth Data Helper Function using Savgol Smoothing
 '''
 def smoothData(data):
+    #fix this to work for 3d points
     df = pd.DataFrame.from_records(data)
     # smooth data!
     #add the third dimension and make each frame a list of 45 in length then smooth the same way
@@ -107,7 +97,6 @@ def motionCapture(path):
     outputFrameRate = 24
     outputVideo = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), outputFrameRate, (frame.shape[1],frame.shape[0]))
     #pairs of points to be aconnected to create a skeleton
-    skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
     data = analyzeKeyPoints(path)
     #data smoothed
     df = smoothData(data)
@@ -153,5 +142,4 @@ def reconstruction():
     Step 3: Calculate corresponding depth (zi) of corresponding point (mi)
     Step 4: Use (uv) and (z) to calculate (x,y,z) for each (mi) and (mj)
     '''
-    #mapping (u,v) 2d point to (x,y,z)
-    return 0
+    return skeletonPairs[0]
