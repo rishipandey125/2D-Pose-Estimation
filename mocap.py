@@ -145,7 +145,9 @@ def poseData(path):
 
 def reconstruction():
     '''
-    Process: Figure out how
+    Process:
+    img ml data comes out as origin top left corner (right: +x) (down: +y)
+    
     '''
     #mapping (u,v) 2d point to (x,y,z)
-    return 0   
+    return 0
