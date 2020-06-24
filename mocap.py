@@ -4,7 +4,6 @@ import pandas as pd
 from scipy import signal
 #WEEKEND OF JUNE 12th:
 # ALWAYS MAKE FIRST AND LAST FRAMES SUPER SIMPLE AND CORRECT
-    #Take Correct Videos and Test (5 Segments)
     #3D point estimation
 #simple mocap project created by Rishi Pandey
 #collect the data of the pose locations
@@ -81,6 +80,7 @@ def analyzeKeyPoints(path):
         previous_x, previous_y = x_keyPoints, y_keyPoints
         keyPoints.append(x_keyPoints + y_keyPoints)
         hasFrame,frame = baseVideo.read()
+        break
     return keyPoints
 
 '''
@@ -144,7 +144,8 @@ def poseData(path):
     return pose2D
 
 def reconstruction():
+    '''
+    Process: Figure out how
+    '''
     #mapping (u,v) 2d point to (x,y,z)
-    return 0
-videoPath = "/Users/rishipandey125/Desktop/testVideosMOCAP/test2.mp4"
-print(poseData(videoPath))
+    return 0   
