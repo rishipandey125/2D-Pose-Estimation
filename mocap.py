@@ -148,8 +148,10 @@ def reconstruction():
     Process:
     img ml data comes out as origin top left corner (right: +x) (down: +y)
     iphone x focal length = 28mm
-    Step 1:
-    
+    Step 1: translate data from top left origin to (u,v) origin (center of img)
+    Step 2: Estimate depth (zj) of initial point (mj)
+    Step 3: Calculate corresponding depth (zi) of corresponding point (mi)
+    Step 4: Use (uv) and (z) to calculate (x,y,z) for each (mi) and (mj)
     '''
     #mapping (u,v) 2d point to (x,y,z)
     return 0
