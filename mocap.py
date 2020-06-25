@@ -71,27 +71,26 @@ def analyzeKeyPoints(path):
         previous_x, previous_y = x_keyPoints, y_keyPoints
         keyPoints.append(x_keyPoints + y_keyPoints)
         hasFrame,frame = baseVideo.read()
-        
+
     return keyPoints
 
 '''
-Smooth Data Helper Function using Savgol Smoothing
+Helper function to Smooth Pose Estimation Data
+Uses Savgol Smoothing
 '''
 def smoothData(data):
-    #fix this to work for 3d points
     df = pd.DataFrame.from_records(data)
     # smooth data!
-    #add the third dimension and make each frame a list of 45 in length then smooth the same way
     for x in range(len(data[0])):
         #window_length = 15 and polyorder = 2
         df[x] = signal.savgol_filter(df[x], 15, 2)
     return df
 
 '''
-Motion Capture Function
-Uses Video Path to Generate Simple Motion Capture Data and Draws a Skeleton Over the Tracked Person
+Draw Skeleton Function
+Uses Video Path to Draw a Skeleton Over the Tracked Person
 '''
-def motionCapture(path):
+def drawSkeleton(path):
     #video object from path
     video = cv2.VideoCapture(path)
     hasFrame,frame = video.read()
