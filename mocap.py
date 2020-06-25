@@ -3,12 +3,14 @@ import numpy as np
 import pandas as pd
 from scipy import signal
 
-
+#A List of Corresponding Joints
 skeletonPairs = [[0,1], [1,2], [2,3], [3,4], [1,5], [5,6], [6,7], [1,14], [14,8], [8,9], [9,10], [14,11], [11,12], [12,13]]
+
 '''
 Anaylyze Keypoints Function
 Uses Video Input to Return List of Keypoints for Each Frame
 '''
+
 def analyzeKeyPoints(path):
     # Paths for the CNN (on local machine)
     protoFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_deploy_linevec_faster_4_stages.prototxt.txt"
@@ -69,7 +71,7 @@ def analyzeKeyPoints(path):
         previous_x, previous_y = x_keyPoints, y_keyPoints
         keyPoints.append(x_keyPoints + y_keyPoints)
         hasFrame,frame = baseVideo.read()
-        break
+        
     return keyPoints
 
 '''
