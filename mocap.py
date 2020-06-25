@@ -97,7 +97,6 @@ def drawSkeleton(path):
     #match this to input framrate
     outputFrameRate = 24
     outputVideo = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), outputFrameRate, (frame.shape[1],frame.shape[0]))
-    #pairs of points to be aconnected to create a skeleton
     data = analyzeKeyPoints(path)
     #data smoothed
     df = smoothData(data)
@@ -108,7 +107,6 @@ def drawSkeleton(path):
             point2 = pair[1]
             cord1 = tuple(np.array([df[point1][frameCount],df[point1+15][frameCount]],int))
             cord2 = tuple(np.array([df[point2][frameCount],df[point2+15][frameCount]],int))
-
             #draws skeleton on given frame
             cv2.circle(frame, cord1, 20, (255, 0, 0), thickness=-1, lineType=cv2.FILLED)
             cv2.putText(frame, "{}".format(point1), cord1, cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, lineType=cv2.LINE_AA)
@@ -117,10 +115,13 @@ def drawSkeleton(path):
             cv2.line(frame, cord1, cord2, (0, 0, 255), 10)
         outputVideo.write(frame)
         frameCount += 1
+        #updates for the next frame
         hasFrame,frame = video.read()
     outputVideo.release()
 
-
+'''
+Returns Organized Smoothed Pose Data 
+'''
 def poseData(path):
     data = analyzeKeyPoints(path)
     df = smoothData(data)
