@@ -1,10 +1,8 @@
 import cv2
 import numpy as np
-#simple mocap project created by Rishi Pandey
 
 # Paths for the CNN (off of my git)
-protoFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_deploy_linevec_faster_4_stages.prototxt.txt"
-weightsFile = "/Users/rishipandey125/Desktop/code/pose_estimation_model/pose_iter_160000.caffemodel"
+#place paths here
 
 # Reading the CNN
 network = cv2.dnn.readNetFromCaffe(protoFile,weightsFile)
