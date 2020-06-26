@@ -120,7 +120,7 @@ def drawSkeleton(path):
     outputVideo.release()
 
 '''
-Returns Organized Smoothed Pose Data 
+Returns Organized Smoothed Pose Data as List of Tuples for each Frame
 '''
 def poseData(path):
     data = analyzeKeyPoints(path)
