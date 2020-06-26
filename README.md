@@ -1,10 +1,8 @@
 # 2D Pose Estimation Project
 Pose estimation project implementing a convolution neural network constructed from the MPII human pose dataset to estimate human joints based off of video footage. I developed this program to gain a deeper understanding of how computer vision and machine learning can be levaraged to identify human poses to create a mobile motion capture pipeline for film, animation, and immersive development. 
 
+# Process and Implementation
 
-Intro/Objective
-  Example
-Process/Examples
 
 # Future Improvements
 To leverage computer vision pose estimation for motion capture, two key features must be added to this project. The first would be 3D reconstruction. Using a mathematical method 3D pose data must be reconstructed to transfer over to motion capture/animation data. With the inclusion of depth sensors on future mobile devices this process may be easier in the future, but for the time being mathematical reconstruction can be explored. 
