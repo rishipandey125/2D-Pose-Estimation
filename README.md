@@ -1,2 +1,6 @@
-# Simple-Motion-Capture
-Simple Motion Capture Project for Film and Animation using OpenCV
+# 2D Pose Estimation Project
+Intro/Objective
+  Example
+Process/Examples
+
+Future Improvements
